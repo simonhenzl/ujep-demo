@@ -1,6 +1,10 @@
+<?php 
+// 1. Start měření času načítání (podle zadání "Na doma")
+$start = microtime(true); 
+?>
 <!DOCTYPE html>
 <html lang="cs">
-<head> 
+<head>
     <meta charset="UTF-8">
     <title>ExoOvoce - Čerstvé tropy</title>
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -18,6 +22,10 @@
             <a href="#">Ovoce</a>
             <a href="#">Kontakt</a>
             <span class="kosik-stav">🛒 Košík: 0 Kč</span>
+            
+            <span style="color: #90ee90; margin-left: 15px; font-weight: bold;">
+                ● <?php echo (date("H") >= 8 && date("H") < 20) ? "Máme otevřeno" : "Momentálně máme zavřeno"; ?>
+            </span>
         </nav>
     </header>
 
@@ -55,8 +63,44 @@
         </div>
     </main>
 
+    <section class="sleva-sekce">
+        <h3>🎁 Získej slevu podle roku narození</h3>
+        <form method="post" action="#sleva">
+            <input type="number" name="n" placeholder="Zadej rok narození" required>
+            <input type="submit" value="Zjistit mou slevu" class="btn-koupit" style="width: auto; margin-left: 10px;">
+        </form>
+
+        <div id="sleva" class="vysledek-slevy">
+            <?php
+            if (isset($_POST['n'])) {
+                $rok = intval($_POST['n']);
+                $aktualniRok = date("Y");
+
+                if ($rok > $aktualniRok) {
+                    echo "Ještě jsi se nenarodil!";
+                } else if ($rok > 2008) {
+                    echo "Budeš bohatý! Máš slevu 20 %. Kód: MLADI20";
+                } else if ($rok > 1990) {
+                    echo "Budeš slavný! Máš slevu 15 %. Kód: ELITA15";
+                } else {
+                    echo "Budeš milovaný! Doprava zdarma pro tebe. Kód: LASKA";
+                }
+            }
+            ?>
+        </div>
+    </section>
+
     <footer>
-        <p>&copy; 2026 E-shop ExoOvoce - Školní projekt</p>
+        <p>&copy; <?php echo date("Y"); ?> E-shop ExoOvoce - Školní projekt</p>
+        <p style="font-size: 0.8em; opacity: 0.8; margin-top: 10px;">
+            Dnes je <?php echo date("d. m. Y"); ?> | 
+            <?php 
+                // Výpočet času generování (podle zadání)
+                $konec = microtime(true);
+                $cas = round($konec - $start, 4);
+                echo "Stránka vypočítána za " . $cas . " s!"; 
+            ?>
+        </p>
     </footer>
 
 </body>
